@@ -28,7 +28,18 @@ const ticketSchema = new mongoose.Schema({
   zipCode: String,
   state: String,
   equipment: String,
+  moduleSize: String,
+  numberOfModules: String,
+  inverterManufacturer: String,
+  numberOfInverters: String,
+  sizeOfInverter: String,
+  systemSize: String,
   electricalService: String,
+  meterLocation: String,
+  mspManufacturer: String,
+  mspBuzzRate: String,
+  mainBreakerSize: String,
+  mpu: Boolean,
   roofingInfo: String,
   batteryInfo: String,
   specialRequest: String,
@@ -42,27 +53,34 @@ const Ticket = mongoose.model("Ticket", ticketSchema);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
+    user: process.env.EMAIL, // Server email for SMTP authentication
+    pass: process.env.EMAIL_PASSWORD, // Server email password (app password if 2FA is enabled)
   },
 });
 
 app.post("/submit", async (req, res) => {
   const formData = req.body;
+
+  console.log("Received form data:", formData);
+
   const ticket = new Ticket(formData);
 
   try {
     await ticket.save();
 
+    console.log("Form data saved to database");
+
     // Prepare email options
     const mailOptions = {
       from: formData.email, // User's email from the form data
-      to: process.env.WEBSITE_OWNER_EMAIL, // Contractor's email address
+      to: process.env.BUSINESS_EMAIL, // Contractor's email address
       subject: "New Ticket Submission",
       text: `A new ticket has been submitted by ${formData.name} (${
         formData.email
       }): \n\n${JSON.stringify(formData, null, 2)}`,
     };
+
+    console.log("Sending email to:", process.env.BUSINESS_EMAIL); // Debug log
 
     // Send email using Nodemailer
     transporter.sendMail(mailOptions, (error, info) => {
