@@ -28,14 +28,14 @@ const requestSchema = new mongoose.Schema(
     deRate: { type: String, required: true },
     //part 4
     roofingInfo: { type: String, required: true },
-    rackType: { type: String, required: true },
-    mountingType: { type: String, required: true },
+    racksToBeUsed: { type: String, required: true },
+    mountsToBeUsed: { type: String, required: true },
     //part 5
-    batteryBrandAndModel: { type: String, required: true },
+    batteryBrandModel: { type: String, required: true },
     numberOfBatteries: { type: String, required: true },
     batteryLocation: { type: String, required: true },
     batterySize: { type: String, required: true },
-    specialNotes: { type: String, required: true },
+    specificNotes: String,
     //part 6
     specialRequest: { type: [String], required: true },
     designType: { type: [String], required: true },
