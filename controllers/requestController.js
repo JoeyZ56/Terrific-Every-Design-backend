@@ -1,9 +1,30 @@
 const Request = require("../models/request");
 const transporter = require("../config/email");
+require("dotenv").config();
+
+// Utility function to convert array fields to comma-separated strings
+const convertArrayFields = (formData, fields) => {
+  fields.forEach((field) => {
+    if (Array.isArray(formData[field])) {
+      formData[field] = formData[field].join(",");
+    }
+  });
+};
 
 exports.submitRequest = async (req, res) => {
   const formData = req.body;
   console.log("Received request: ", formData);
+
+  // Convert array fields to comma-separated strings
+  const arrayFields = [
+    "roofingInfo",
+    "specialRequest",
+    "designType",
+    "priority",
+  ];
+
+  // Convert array fields to comma-separated strings
+  convertArrayFields(formData, arrayFields);
 
   const request = new Request(formData);
 
@@ -12,8 +33,8 @@ exports.submitRequest = async (req, res) => {
     console.log("Request saved to database");
 
     const mailOptions = {
-      from: process.env.EMAIL,
-      to: process.env.EMAIL,
+      from: formData.email,
+      to: process.env.BUSINESS_EMAIL,
       subject: "New Solar Request",
       text: `You have received a new solar request from ${formData.name}. (${
         formData.email
