@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // Request Schema
 const requestSchema = new mongoose.Schema(
   {
+    //part 1
     name: { type: String, required: true },
     email: { type: String, required: true },
     contactNumber: { type: String, required: true },
@@ -10,6 +11,7 @@ const requestSchema = new mongoose.Schema(
     city: { type: String, required: true },
     zipCode: { type: String, required: true },
     state: { type: String, required: true },
+    //part 2
     equipment: { type: String, required: true },
     moduleSize: { type: String, required: true },
     numberOfModules: { type: String, required: true },
@@ -17,15 +19,24 @@ const requestSchema = new mongoose.Schema(
     numberOfInverters: { type: String, required: true },
     sizeOfInverter: { type: String, required: true },
     systemSize: { type: String, required: true },
-    electricalService: { type: String, required: true },
+    //part 3
     meterLocation: { type: String, required: true },
     mspManufacturer: { type: String, required: true },
     mspBuzzRate: { type: String, required: true },
     mainBreakerSize: { type: String, required: true },
     mpu: { type: Boolean, required: true },
     deRate: { type: String, required: true },
-    roofingInfo: { type: [String], required: true },
-    batteryInfo: { type: String, required: true },
+    //part 4
+    roofingInfo: { type: String, required: true },
+    rackType: { type: String, required: true },
+    mountingType: { type: String, required: true },
+    //part 5
+    batteryBrandAndModel: { type: String, required: true },
+    numberOfBatteries: { type: String, required: true },
+    batteryLocation: { type: String, required: true },
+    batterySize: { type: String, required: true },
+    specialNotes: { type: String, required: true },
+    //part 6
     specialRequest: { type: [String], required: true },
     designType: { type: [String], required: true },
     priority: { type: [String], required: true },
