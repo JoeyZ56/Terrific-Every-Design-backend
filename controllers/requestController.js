@@ -1,6 +1,11 @@
 const Request = require("../models/request");
 const transporter = require("../config/email");
+import multer from "multer";
 require("dotenv").config();
+
+// Multer configuration
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // Utility function to convert array fields to comma-separated strings
 const convertArrayFields = (formData, fields) => {
@@ -12,6 +17,16 @@ const convertArrayFields = (formData, fields) => {
 };
 
 exports.submitRequest = async (req, res) => {
+  //multer middleware to handle file uploads
+  upload.single("fileUpload")(req, res, async (err) => {
+    if (err) {
+      console.log("Error uploading file: ", err);
+      return res
+        .status(500)
+        .json({ message: "Server error submiting file from form" });
+    }
+  });
+
   const formData = req.body;
   console.log("Received request: ", formData);
 
@@ -39,6 +54,14 @@ exports.submitRequest = async (req, res) => {
       text: `You have received a new solar request from ${formData.name}. (${
         formData.email
       }): \n\n${JSON.stringify(formData, null, 2)}`,
+      attachments: file
+        ? [
+            {
+              filename: file.oiginalname,
+              content: file.buffer,
+            },
+          ]
+        : [],
     };
 
     console.log("Sending email to:", process.env.BUSINESS_EMAIL);
