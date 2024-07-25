@@ -11,6 +11,8 @@ const requestSchema = new mongoose.Schema(
     city: { type: String, required: true },
     zipCode: { type: String, required: true },
     state: { type: String, required: true },
+    ahj: String,
+    apn: String,
     //part 2
     equipment: { type: String, required: true },
     moduleSize: { type: String, required: true },
@@ -40,6 +42,8 @@ const requestSchema = new mongoose.Schema(
     specialRequest: { type: [String], required: true },
     designType: { type: [String], required: true },
     priority: { type: [String], required: true },
+    //part 7
+    fileUpLoad: Buffer,
   },
   {
     timestamps: true,
