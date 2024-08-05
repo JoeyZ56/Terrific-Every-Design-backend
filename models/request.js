@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const requestSchema = new mongoose.Schema(
   {
     //part 1
-    name: { type: String, required: true },
+    name: String,
     email: { type: String, required: true },
     contactNumber: { type: String, required: true },
     address: { type: String, required: true },
@@ -18,12 +18,12 @@ const requestSchema = new mongoose.Schema(
     moduleSize: { type: String, required: true },
     numberOfModules: { type: String, required: true },
     inverterManufacturer: { type: String, required: true },
-    numberOfInverters: { type: String, required: true },
+    numberOfInverters: String,
     sizeOfInverter: { type: String, required: true },
     systemSize: { type: String, required: true },
     //part 3
     meterLocation: { type: String, required: true },
-    mspManufacturer: { type: String, required: true },
+    mspManufacturer: String,
     mspBuzzRate: { type: String, required: true },
     mainBreakerSize: { type: String, required: true },
     mpu: { type: Boolean, required: true },
@@ -33,10 +33,10 @@ const requestSchema = new mongoose.Schema(
     racksToBeUsed: { type: String, required: true },
     mountsToBeUsed: { type: String, required: true },
     //part 5
-    batteryBrandModel: { type: String, required: true },
-    numberOfBatteries: { type: String, required: true },
-    batteryLocation: { type: String, required: true },
-    batterySize: { type: String, required: true },
+    batteryBrandModel: String,
+    numberOfBatteries: String,
+    batteryLocation: String,
+    batterySize: String,
     specificNotes: String,
     //part 6
     specialRequest: { type: [String], required: true },

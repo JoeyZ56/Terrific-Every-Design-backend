@@ -18,25 +18,14 @@ const convertArrayFields = (formData, fields) => {
 
 exports.getRequests = async (req, res) => {
   try {
-    const request = await Request.find().sort({ createdAt: -1 });
-    res.status(200).json(request);
+    const requests = await Request.find().sort({ createdAt: -1 });
+    res.status(200).json(requests);
   } catch (error) {
     res
       .status(500)
       .json({ message: "Server error fetching requests for graph" });
   }
 };
-
-//multer middleware to handle file uploads
-exports.upload = upload.single("fileUpload");
-// upload.single("fileUpload")(req, res, async (err) => {
-//   if (err) {
-//     console.log("Error uploading file: ", err);
-//     return res
-//       .status(500)
-//       .json({ message: "Server error submiting file from form" });
-//   }
-// });
 
 exports.submitRequest = async (req, res) => {
   const formData = req.body;
@@ -52,10 +41,13 @@ exports.submitRequest = async (req, res) => {
 
   convertArrayFields(formData, arrayFields);
 
-  //Include file in form data if it exists
+  // multer middleware to handle file uploads
+  exports.upload = upload.single("fileUpload");
+
+  // Include file in form data if it exists
   const file = req.file;
   if (file) {
-    formData.fileUpload = file.buffer;
+    formData.fileUpload = file.buffer.toString("base64");
   }
 
   const request = new Request(formData);
@@ -74,8 +66,10 @@ exports.submitRequest = async (req, res) => {
       attachments: file
         ? [
             {
-              filename: file.oiginalname,
-              content: file.buffer,
+              filename: file.originalname,
+              content: formData.fileUpload,
+              encoding: "base64",
+              contentType: file.mimetype,
             },
           ]
         : [],
