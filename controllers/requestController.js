@@ -31,8 +31,16 @@ exports.submitRequest = async (req, res) => {
 
   //Include file upload if it exists
   const file = req.file;
+  let attachments = [];
   if (file) {
-    formData.fileUpload = file.buffer;
+    attachments = [
+      {
+        filename: file.originalname,
+        content: file.buffer.toString("base64"),
+        encoding: "base64",
+        contentType: file.mimetype,
+      },
+    ];
   }
 
   const request = new Request(formData);
@@ -48,16 +56,7 @@ exports.submitRequest = async (req, res) => {
       text: `You have received a new solar request from ${formData.name}. (${
         formData.email
       }): \n\n${JSON.stringify(formData, null, 2)}`,
-      attachments: file
-        ? [
-            {
-              filename: file.originalname,
-              content: formData.fileUpload,
-              encoding: "base64",
-              contentType: file.mimetype,
-            },
-          ]
-        : [],
+      attachments: attachments,
     };
 
     console.log("Sending email to:", process.env.BUSINESS_EMAIL);
