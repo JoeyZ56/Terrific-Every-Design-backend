@@ -1,11 +1,11 @@
 const Request = require("../models/request");
 const transporter = require("../config/email");
-const multer = require("multer");
 require("dotenv").config();
 
-// Multer configuration
+//multer packages
+const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage }).single("fileUpload");
 
 // Utility function to convert array fields to comma-separated strings
 const convertArrayFields = (formData, fields) => {
@@ -14,17 +14,6 @@ const convertArrayFields = (formData, fields) => {
       formData[field] = formData[field].join(",");
     }
   });
-};
-
-exports.getRequests = async (req, res) => {
-  try {
-    const requests = await Request.find().sort({ createdAt: -1 });
-    res.status(200).json(requests);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Server error fetching requests for graph" });
-  }
 };
 
 exports.submitRequest = async (req, res) => {
@@ -38,16 +27,12 @@ exports.submitRequest = async (req, res) => {
     "designType",
     "priority",
   ];
-
   convertArrayFields(formData, arrayFields);
 
-  // multer middleware to handle file uploads
-  exports.upload = upload.single("fileUpload");
-
-  // Include file in form data if it exists
+  //Include file upload if it exists
   const file = req.file;
   if (file) {
-    formData.fileUpload = file.buffer.toString("base64");
+    formData.fileUpload = file.buffer;
   }
 
   const request = new Request(formData);
@@ -92,3 +77,16 @@ exports.submitRequest = async (req, res) => {
     res.status(500).json({ message: "Server error submitting form" });
   }
 };
+
+exports.getRequests = async (req, res) => {
+  try {
+    const requests = await Request.find().sort({ createdAt: -1 });
+    res.status(200).json(requests);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Server error fetching requests for graph" });
+  }
+};
+
+exports.upload = upload;
