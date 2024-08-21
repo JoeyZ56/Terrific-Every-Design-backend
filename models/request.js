@@ -20,6 +20,7 @@ const requestSchema = new mongoose.Schema(
     inverterManufacturer: { type: String, required: true },
     numberOfInverters: String,
     sizeOfInverter: { type: String, required: true },
+    electricityType: { type: String, required: true },
     systemSize: { type: String, required: true },
     //part 3
     meterLocation: { type: String, required: true },
@@ -43,7 +44,7 @@ const requestSchema = new mongoose.Schema(
     designType: { type: [String], required: true },
     priority: { type: [String], required: true },
     //part 7
-    fileUpLoad: Buffer,
+    fileUpload: Buffer,
   },
   {
     timestamps: true,

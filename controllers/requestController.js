@@ -5,7 +5,7 @@ require("dotenv").config();
 //multer packages
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).single("fileUpload");
+const upload = multer({ storage: storage }).array("fileUpload");
 
 // Utility function to convert array fields to comma-separated strings
 const convertArrayFields = (formData, fields) => {
