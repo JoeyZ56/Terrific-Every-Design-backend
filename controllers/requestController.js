@@ -17,6 +17,14 @@ const convertArrayFields = (formData, fields) => {
 };
 
 exports.submitRequest = async (req, res) => {
+  const files = req.files || [];
+  let attachments = files.map((file) => ({
+    filename: file.originalname,
+    content: file.buffer,
+    encoding: "base64",
+    contentType: file.mimetype,
+  }));
+
   const formData = req.body;
   console.log("Received request: ", formData);
 
@@ -30,18 +38,18 @@ exports.submitRequest = async (req, res) => {
   convertArrayFields(formData, arrayFields);
 
   //Include file upload if it exists
-  const file = req.file;
-  let attachments = [];
-  if (file) {
-    attachments = [
-      {
-        filename: file.originalname,
-        content: file.buffer.toString("base64"),
-        encoding: "base64",
-        contentType: file.mimetype,
-      },
-    ];
-  }
+  // const file = req.file;
+  // let attachments = [];
+  // if (file) {
+  //   attachments = [
+  //     {
+  //       filename: file.originalname,
+  //       content: file.buffer, //.toString("base64")
+  //       encoding: "base64",
+  //       contentType: file.mimetype,
+  //     },
+  //   ];
+  // }
 
   const request = new Request(formData);
 
