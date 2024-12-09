@@ -14,7 +14,18 @@ app.use(bodyParser.json());
 //CORS Middleware
 app.use(
   cors({
-    origin: "https://terrific-every-design-frontend.vercel.app",
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "https://terrific-every-design-frontend.vercel.app",
+        "http://localhost:5100", // Add your local development URL
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow the request
+      } else {
+        callback(new Error("Not allowed by CORS")); // Block the request
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
