@@ -24,6 +24,19 @@ app.use((req, res, next) => {
   next();
 });
 
+//Debugging logs
+app.use((req, res, next) => {
+  console.log(`Request Headers:`, req.headers);
+  next();
+});
+
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    console.log(`Response Headers:`, res.getHeaders());
+  });
+  next();
+});
+
 // MongoDB Connection
 connectDB();
 
