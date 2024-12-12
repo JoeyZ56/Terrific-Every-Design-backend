@@ -17,7 +17,7 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = [
         "https://terrific-every-design-frontend.vercel.app",
-        "http://localhost:5100",
+        "http://localhost:5100/",
       ];
 
       if (!origin || allowedOrigins.includes(origin)) {
