@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "www.terrificeverydesign.com",
+        "https://www.terrificeverydesign.com",
         "http://localhost:5100",
       ];
 
