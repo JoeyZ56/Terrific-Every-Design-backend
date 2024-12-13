@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        "https://terrific-every-design-frontend.vercel.app",
+        "www.terrificeverydesign.com",
         "http://localhost:5100",
       ];
 
