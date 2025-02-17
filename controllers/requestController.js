@@ -24,16 +24,23 @@ exports.submitRequest = async (req, res) => {
 
     // Upload images to Cloudinary and get URLs
     const uploadedImages = await Promise.all(
-      files.map((file) => {
+      files.map((file, index) => {
         return new Promise((resolve, reject) => {
+          const fileExtension = file.mimetype.split("/")[1]; // Get file type (jpg, png, etc.)
+          const publicId = `solar_request_${Date.now()}_${index}`; // Custom short ID
+
           const uploadStream = cloudinary.uploader.upload_stream(
-            { folder: "uploaded_images" },
+            {
+              folder: "uploaded_images",
+              public_id: publicId, // Custom filename
+              format: fileExtension, // Keep original format
+            },
             (error, result) => {
               if (error) {
                 console.error("Error uploading to Cloudinary:", error);
                 reject(error);
               } else {
-                resolve(result.secure_url); // Store Cloudinary URL
+                resolve(result.secure_url); // Store shorter Cloudinary URL
               }
             }
           );
@@ -63,30 +70,23 @@ exports.submitRequest = async (req, res) => {
     console.log("Request saved to database");
 
     const emailBody = `
-    <h2>New Solar Request</h2>
-    <p>You have received a new request from <strong>${
-      req.body.name
-    }</strong> (<a href="mailto:${req.body.email}">${req.body.email}</a>)</p>
+  <h2>New Solar Request</h2>
+  <p>You have received a new request from <strong>${
+    req.body.name
+  }</strong> (<a href="mailto:${req.body.email}">${req.body.email}</a>)</p>
   
-    <h3>Uploaded Files:</h3>
-    <ul>
-      ${
-        uploadedImages.length > 0
-          ? uploadedImages
-              .map(
-                (url, index) =>
-                  `<li><a href="${url}" target="_blank">Image ${
-                    index + 1
-                  }</a></li>`
-              )
-              .join("")
-          : "<p><strong>No files uploaded.</strong></p>"
-      }
-    </ul>
-  
-    <h3>Request Details:</h3>
-    <pre>${JSON.stringify(req.body, null, 2)}</pre>
-  `;
+  <h3>Uploaded Files:</h3>
+  ${
+    uploadedImages.length > 0
+      ? `<ul>${uploadedImages
+          .map((url) => `<li><a href="${url}" target="_blank">${url}</a></li>`)
+          .join("")}</ul>`
+      : "<p><em>No files uploaded.</em></p>"
+  }
+
+  <h3>Request Details:</h3>
+  <pre>${JSON.stringify(req.body, null, 2)}</pre>
+`;
 
     // Email setup with Cloudinary URLs
     const mailOptions = {
