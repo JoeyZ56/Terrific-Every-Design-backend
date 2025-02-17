@@ -43,8 +43,10 @@ exports.submitRequest = async (req, res) => {
     );
 
     // Add Cloudinary URLs to request body
-    console.log("FInal Upload Image URLs:", uploadedImages);
-    req.body.fileUpload = uploadedImages;
+    req.body.fileUpload = Array.isArray(req.body.fileUpload)
+      ? req.body.fileUpload
+      : [req.body.fileUpload]; //ensures files upload as an array
+    console.log("Final Processed fileUpload in Backend:", req.body.fileUpload);
 
     // Convert array fields to comma-separated strings
     const arrayFields = [
