@@ -59,18 +59,29 @@ exports.submitRequest = async (req, res) => {
     await request.save();
     console.log("Request saved to database");
 
+    const emailBody = `
+  <h2>New Solar Request</h2>
+  <p>You have received a new request from <strong>${
+    req.body.name
+  }</strong> (<a href="mailto:${req.body.email}">${req.body.email}</a>)</p>
+  
+  <h3>Uploaded Files:</h3>
+  <ul>
+    ${uploadedImages
+      .map((url) => `<li><a href="${url}" target="_blank">${url}</a></li>`)
+      .join("")}
+  </ul>
+
+  <h3>Request Details:</h3>
+  <pre>${JSON.stringify(req.body, null, 2)}</pre>
+`;
+
     // Email setup with Cloudinary URLs
     const mailOptions = {
       from: req.body.email,
       to: process.env.BUSINESS_EMAIL,
       subject: "New Solar Request",
-      text: `You have received a new solar request from ${req.body.name} (${
-        req.body.email
-      }): \n\n${JSON.stringify(req.body, null, 2)}`,
-      attachments: uploadedImages.map((url) => ({
-        filename: url.split("/").pop(),
-        path: url, // Attach as URL link
-      })),
+      html: emailBody,
     };
 
     console.log("Sending email to:", process.env.BUSINESS_EMAIL);
