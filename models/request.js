@@ -30,10 +30,21 @@ const requestSchema = new mongoose.Schema(
     mpu: { type: Boolean, required: true },
     deRate: { type: Boolean, required: true },
     //part 4
-    roofingInfo: { type: String, required: true },
+    roofingInfo: {
+      type: String,
+      required: true,
+      enum: [
+        "Shingle",
+        "Flat-Tile",
+        "Metal",
+        "S-Tile",
+        "Flat-Roof",
+        "Ground-Mount",
+      ],
+    },
     racksToBeUsed: { type: String, required: true },
     mountsToBeUsed: { type: String, required: true },
-    //part 5
+    //part 5 All Optional
     batteryBrandModel: String,
     numberOfBatteries: String,
     batteryLocation: String,
@@ -41,8 +52,16 @@ const requestSchema = new mongoose.Schema(
     specificNotes: String,
     //part 6
     specialRequest: [String],
-    designType: { type: [String], required: true },
-    priority: { type: [String], required: true },
+    designType: {
+      type: String,
+      required: true,
+      enum: ["Regular", "Battery", "Commercial"],
+    },
+    priority: {
+      type: String,
+      required: true,
+      enum: ["Standard", "Priority", "Urgent"],
+    },
     //part 7
     fileUpload: Buffer,
   },

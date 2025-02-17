@@ -1,12 +1,13 @@
 const express = require("express");
-const router = express.Router();
+const upload = require("../middleware/multer");
 const {
   submitRequest,
   getRequests,
-  upload,
 } = require("../controllers/requestController");
 
-router.post("/submit-request", upload, submitRequest);
+const router = express.Router();
+
+router.post("/submit-request", upload.array("fileUpload", 10), submitRequest);
 router.get("/get-requests", getRequests);
 
 module.exports = router;
