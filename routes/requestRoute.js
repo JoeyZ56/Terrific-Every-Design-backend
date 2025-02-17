@@ -7,7 +7,7 @@ const {
 
 const router = express.Router();
 
-router.post("/submit-request", upload.array("fileUpload", 10), submitRequest);
+router.post("/submit-request", upload.array("fileUpload", 20), submitRequest);
 router.get("/get-requests", getRequests);
 
 module.exports = router;

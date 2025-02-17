@@ -4,6 +4,7 @@ const cloudinary = require("../middleware/cloudinary");
 const convertArrayFields = require("../utils/formUtils");
 require("dotenv").config();
 
+// submitting request function
 exports.submitRequest = async (req, res) => {
   console.log("Received Request:", req.body);
   console.log("Uploaded Files:", req.files);
@@ -90,6 +91,7 @@ exports.submitRequest = async (req, res) => {
   }
 };
 
+// Sending requests numbers to graph
 exports.getRequests = async (req, res) => {
   try {
     const requests = await Request.find().sort({ createdAt: -1 });
