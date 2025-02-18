@@ -75,15 +75,6 @@ exports.submitRequest = async (req, res) => {
     req.body.name
   }</strong> (<a href="mailto:${req.body.email}">${req.body.email}</a>)</p>
   
-  <h3>Uploaded Files:</h3>
-  ${
-    uploadedImages.length > 0
-      ? `<ul>${uploadedImages
-          .map((url) => `<li><a href="${url}" target="_blank">${url}</a></li>`)
-          .join("")}</ul>`
-      : "<p><em>No files uploaded.</em></p>"
-  }
-
   <h3>Request Details:</h3>
   <pre>${JSON.stringify(req.body, null, 2)}</pre>
 `;
