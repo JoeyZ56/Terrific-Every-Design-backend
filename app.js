@@ -24,6 +24,7 @@ app.use(
       const allowedOrigins = [
         "https://www.terrificeverydesign.com",
         "http://localhost:5100",
+        "http://127.0.0.1:5100"
       ];
 
       if (!origin || allowedOrigins.includes(origin)) {
