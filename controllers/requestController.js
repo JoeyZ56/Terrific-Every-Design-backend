@@ -50,9 +50,7 @@ exports.submitRequest = async (req, res) => {
     );
 
     // Add Cloudinary URLs to request body
-    req.body.fileUpload = Array.isArray(req.body.fileUpload)
-      ? req.body.fileUpload
-      : [req.body.fileUpload]; //ensures files upload as an array
+    req.body.fileUpload = uploadedImages //ensures files upload as an array
     console.log("Final Processed fileUpload in Backend:", req.body.fileUpload);
 
     // Convert array fields to comma-separated strings
@@ -70,14 +68,19 @@ exports.submitRequest = async (req, res) => {
     console.log("Request saved to database");
 
     const emailBody = `
-  <h2>New Solar Request</h2>
-  <p>You have received a new request from <strong>${
-    req.body.name
-  }</strong> (<a href="mailto:${req.body.email}">${req.body.email}</a>)</p>
+    <h2>New Solar Request</h2>
+    <p>You have received a new request from <strong>${
+      req.body.name
+    }</strong> (<a href="mailto:${req.body.email}">${req.body.email}</a>)</p>
   
-  <h3>Request Details:</h3>
-  <pre>${JSON.stringify(req.body, null, 2)}</pre>
-`;
+    <h3>Uploaded Files:</h3>
+    ${uploadedImages.length > 0 ? `<ul>` + 
+      uploadedImages.map(url => `<li><a href="${url}" target="_blank">${url}</a></li>`).join("") + `</ul>`
+      : "<p>No files uploaded.</p>"}
+  
+    <h3>Request Details:</h3>
+    <pre>${JSON.stringify(req.body, null, 2)}</pre>
+  `;
 
     // Email setup with Cloudinary URLs
     const mailOptions = {
