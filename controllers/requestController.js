@@ -88,8 +88,6 @@ exports.submitRequest = async (req, res) => {
       html: emailBody,
     };
 
-    console.log("Sending email to:", process.env.BUSINESS_EMAIL);
-
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error("Error sending email: ", error);
@@ -97,7 +95,6 @@ exports.submitRequest = async (req, res) => {
           .status(500)
           .json({ message: "Server error submitting form", error });
       }
-      console.log("Email sent: ", info.response);
       return res.status(200).json({ message: "Form submitted successfully" });
     });
   } catch (error) {
