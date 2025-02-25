@@ -29,11 +29,13 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true); // Allow the request
       } else {
+        console.log("CORS error: Origin not allowed:", origin);
         callback(new Error("Not allowed by CORS")); // Block the request
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Allow cookies to be sent
   })
 );
 
