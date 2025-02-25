@@ -6,8 +6,6 @@ require("dotenv").config();
 
 // submitting request function
 exports.submitRequest = async (req, res) => {
-  console.log("Received Request:", req.body);
-  console.log("Uploaded Files:", req.files);
 
   // Convert string booleans ('true'/'false') back to actual booleans
   req.body.mpu = req.body.mpu === "true";
@@ -16,8 +14,6 @@ exports.submitRequest = async (req, res) => {
     req.body.electricalEngineeringReport === "true";
   req.body.structuralEngineeringReport =
     req.body.structuralEngineeringReport === "true";
-
-  console.log("Converted Request Body:", req.body);
 
   try {
     const files = req.files || [];
@@ -49,8 +45,10 @@ exports.submitRequest = async (req, res) => {
       })
     );
 
+    console.log("Raw uploaded images:", uploadedImages);
+
     // Add Cloudinary URLs to request body
-    req.body.fileUpload = uploadedImages //ensures files upload as an array
+    req.body.fileUpload = uploadedImages.length > 0 ? uploadedImages : [] //ensures files upload as an array
     console.log("Final Processed fileUpload in Backend:", req.body.fileUpload);
 
     // Convert array fields to comma-separated strings
