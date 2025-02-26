@@ -6,7 +6,6 @@ require("dotenv").config();
 
 // submitting request function
 exports.submitRequest = async (req, res) => {
-
   // Convert string booleans ('true'/'false') back to actual booleans
   req.body.mpu = req.body.mpu === "true";
   req.body.deRate = req.body.deRate === "true";
@@ -16,39 +15,19 @@ exports.submitRequest = async (req, res) => {
     req.body.structuralEngineeringReport === "true";
 
   try {
-    const files = req.files || [];
-
-    // Upload images to Cloudinary and get URLs
-    const uploadedImages = await Promise.all(
-      files.map((file, index) => {
-        return new Promise((resolve, reject) => {
-          const fileExtension = file.mimetype.split("/")[1]; // Get file type (jpg, png, etc.)
-          const publicId = `solar_request_${Date.now()}_${index}`; // Custom short ID
-
-          const uploadStream = cloudinary.uploader.upload_stream(
-            {
-              folder: "uploaded_images",
-              public_id: publicId, // Custom filename
-              format: fileExtension, // Keep original format
-            },
-            (error, result) => {
-              if (error) {
-                console.error("Error uploading to Cloudinary:", error);
-                reject(error);
-              } else {
-                resolve(result.secure_url); // Store shorter Cloudinary URL
-              }
-            }
-          );
-          uploadStream.end(file.buffer); // Send file buffer to Cloudinary
-        });
-      })
-    );
+    // Extract uploaded image URLs directly from request body
+    let uploadedImages = [];
+    try {
+      uploadedImages = req.body.fileUpload ? JSON.parse(req.body.fileUpload) : [];
+    } catch (error) {
+      console.error("Error parsing fileUpload:", error);
+    }
 
     console.log("Raw uploaded images:", uploadedImages);
 
-    // Add Cloudinary URLs to request body
-    req.body.fileUpload = uploadedImages.length > 0 ? uploadedImages : [] //ensures files upload as an array
+    // Ensure `req.body.fileUpload` is stored as an array
+    req.body.fileUpload = uploadedImages;
+
     console.log("Final Processed fileUpload in Backend:", req.body.fileUpload);
 
     // Convert array fields to comma-separated strings
@@ -102,6 +81,7 @@ exports.submitRequest = async (req, res) => {
     res.status(500).json({ message: "Server error submitting form", error });
   }
 };
+
 
 // Sending requests numbers to graph
 exports.getRequests = async (req, res) => {
